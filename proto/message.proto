@@ -1,0 +1,28 @@
+syntax = "proto2";
+
+message Query_tree {
+  optional int32 command = 1;
+  repeated Filter filters = 2;
+  repeated Value_setting settings = 3;
+
+  message Filter {
+    repeated Comparator comp_list = 1;
+  }
+
+  message Value_setting {
+    required Field_value_pair fv = 1;
+  }
+
+  message Comparator {
+    required int32 operation = 1;
+    required Field_value_pair fv = 2;
+  }
+
+  message Field_value_pair {
+    required string field = 1;
+    required int32 val_type = 2;
+    optional int64 int_val = 3;
+    optional float real_val = 4;
+  }
+
+}
