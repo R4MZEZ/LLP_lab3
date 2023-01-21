@@ -1,110 +1,54 @@
 #include <pb_encode.h>
 #include <pb_decode.h>
 #include "proto/message.pb.h"
-#include "parser/common.h"
+#include "headers/common.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <netdb.h>
-#include <arpa/inet.h>
-#include <sys/wait.h>
-#include <signal.h>
 
-#define PORT "3939"
-#define BACKLOG 10
-#define MAXDATASIZE 100
 
-void sigchld_handler(int s) {
-    while (waitpid(-1, NULL, WNOHANG) > 0);
-}
-
-void *get_in_addr(struct sockaddr *sa) {
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in *) sa)->sin_addr);
-    }
-
-    return &(((struct sockaddr_in6 *) sa)->sin6_addr);
-}
+#define PORT 3939
 
 
 int main(void) {
-    int sockfd, new_fd;  // слушаем на sock_fd, новые соединения - на new_fd
-    struct addrinfo hints, *servinfo, *p;
-    struct sockaddr_storage their_addr; // информация об адресе клиента
-    socklen_t sin_size;
-    struct sigaction sa;
-    int yes = 1;
-    char s[INET6_ADDRSTRLEN];
-    int rv;
+    int listenfd, connfd;
+    struct sockaddr_in servaddr;
+    int reuse = 1;
 
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE; // use my IP
+    listenfd = socket(AF_INET, SOCK_STREAM, 0);
+    setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse));
 
-    if ((rv = getaddrinfo(NULL, PORT, &hints, &servinfo)) != 0) {
-        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+    memset(&servaddr, 0, sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+    servaddr.sin_port = htons(PORT);
+
+    if (bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) != 0)
+    {
+        perror("bind");
         return 1;
     }
 
-// цикл через все результаты, чтобы забиндиться на первом возможном
-    for (p = servinfo; p != NULL; p = p->ai_next) {
-        if ((sockfd = socket(p->ai_family, p->ai_socktype,
-                             p->ai_protocol)) == -1) {
-            perror("server:socket\n");
-            continue;
-        }
-
-        if (setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &yes,
-                       sizeof(int)) == -1) {
-            perror("setsockopt\n");
-            exit(1);
-        }
-
-        if (bind(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-            close(sockfd);
-            perror("server:bind\n");
-            continue;
-        }
-
-        break;
-    }
-
-    if (p == NULL) {
-        fprintf(stderr, "server:failed to bind\n");
-        return 2;
-    }
-
-    freeaddrinfo(servinfo); // всё, что можно, с этой структурой мы сделали
-
-    if (listen(sockfd, BACKLOG) == -1) {
+    if (listen(listenfd, 5) != 0)
+    {
         perror("listen");
-        exit(1);
-    }
-
-    sa.sa_handler = sigchld_handler; // обрабатываем мёртвые процессы
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGCHLD, &sa, NULL) == -1) {
-        perror("sigaction");
-        exit(1);
+        return 1;
     }
 
     printf("server: waiting for connection…\n");
-    sin_size = sizeof their_addr;
-    new_fd = accept(sockfd, (struct sockaddr *) &their_addr, &sin_size);
-    inet_ntop(their_addr.ss_family,
-              get_in_addr((struct sockaddr *) &their_addr),
-              s, sizeof s);
-    printf("server: got connection from %s\n", s);
+    connfd = accept(listenfd, NULL, NULL);
 
-    pb_istream_t input = pb_istream_from_socket(new_fd);
+    if (connfd < 0)
+    {
+        perror("accept");
+        return 1;
+    }
 
-    size_t numbytes;
-    char buf[MAXDATASIZE];
+    printf("Got connection.\n");
+
+    pb_istream_t input = pb_istream_from_socket(connfd);
 
     while (1) {
         Query_tree t = {};
@@ -113,17 +57,7 @@ int main(void) {
             printf("Decode failed: %s\n", PB_GET_ERROR(&input));
             return 2;
         }
-
-
-//        if ((numbytes = recv(new_fd, buf, MAXDATASIZE - 1, 0)) == -1) {
-//            perror("recv");
-//            return 1;
-//        }
-//        buf[numbytes] = 0;
         printf("server: received `%d`\n", t.command);
-
-//        if (send(new_fd, "Hello, world!", 13, 0) == -1)
-//            perror("send");
 
     }
 

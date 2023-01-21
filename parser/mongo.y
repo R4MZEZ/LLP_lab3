@@ -1,22 +1,8 @@
 %{
-void yyerror (char *s);
-int yylex();
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include "signatures.h"
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <string.h>
-#include "common.h"
-#include "../proto/message.pb.h"
-#include <pb_encode.h>
-#include <pb_decode.h>
+#include "headers/mongo.h"
 
 struct query_tree tree = {0};
-struct query_tree empty_tree = {0};
+const struct query_tree empty_tree = {0};
 
 struct extended_comparator* cmp;
 size_t vtype;
@@ -24,19 +10,8 @@ size_t size = 0;
 
 int sockfd, numbytes;
 
-void print_tree();
-void set_cur_operation(uint8_t operation);
-void set_cur_value(char* field, uint64_t val, double fval);
-void append_val_setting(char* field, uint64_t val, double fval);
-void switch_filter();
-void set_comp();
-void set_command(uint8_t command);
-void *test_malloc(size_t size_of);
-void print_ram();
-void send_data();
-
 #define MAXDATASIZE 100
-#define PORT "3939"
+#define PORT 3939
 %}
 
 %union {uint64_t num; char *string; float fnum;}
@@ -138,61 +113,27 @@ comp : LT {$$ = 1;}
 %%                     /* C code */
 
 
-void *get_in_addr(struct sockaddr *sa)
-{
-    if (sa->sa_family == AF_INET) {
-        return &(((struct sockaddr_in*)sa)->sin_addr);
-    }
-
-    return &(((struct sockaddr_in6*)sa)->sin6_addr);
-}
-
 int main(int argc, char *argv[]) {
-	struct addrinfo hints, *servinfo, *p;
-	int rv;
-	char s[INET6_ADDRSTRLEN];
 
-	if (argc != 2) {
-	fprintf(stderr, "usage: client hostname\n");
-	return 1;
+	struct sockaddr_in servaddr;
+	char *path = NULL;
+
+	if (argc > 1)
+	path = argv[1];
+
+	sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
+	memset(&servaddr, 0, sizeof(servaddr));
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+	servaddr.sin_port = htons(PORT);
+
+	if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) != 0){
+		perror("connect");
+		return 1;
 	}
 
-	memset(&hints, 0, sizeof(struct addrinfo));
-	hints.ai_family = AF_UNSPEC;
-	hints.ai_socktype = SOCK_STREAM;
-
-	if ((rv = getaddrinfo(argv[1], PORT, &hints, &servinfo)) != 0) {
-	fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
-	return 1;
-	}
-
-	// Проходим через все результаты и соединяемся к первому возможному
-	for (p = servinfo; p != NULL; p = p->ai_next) {
-	if ((sockfd = socket(p->ai_family, p->ai_socktype,
-			     p->ai_protocol)) == -1) {
-	    perror("client: socket\n");
-	    continue;
-	}
-
-	if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
-	    close(sockfd);
-	    perror("client: connect\n");
-	    continue;
-	}
-
-	break;
-	}
-
-	if (p == NULL) {
-	fprintf(stderr, "client: failed to connect\n");
-	return 2;
-	}
-
-	inet_ntop(p->ai_family, get_in_addr((struct sockaddr *) p->ai_addr),
-	      s, sizeof s);
-	printf("client: connecting to %s\n", s);
-
-	freeaddrinfo(servinfo);
+	printf("client: connecting\n");
 
 	while(1){
 		yyparse();
@@ -211,18 +152,7 @@ void send_data(){
 	{
 	    fprintf(stderr, "Encoding failed: %s\n", PB_GET_ERROR(&output));
 	}
-
-//	char buf[MAXDATASIZE];
-//
-//	if (send(sockfd, "Hello, server!", 13, 0) == -1)
-//		perror("send");
-//
-//	if ((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) == -1) {
-//		perror("recv");
-//		return 1;
-//	}
-//	buf[numbytes] = 0;
-//	printf("client: received `%s`\n", buf);
+	tree = empty_tree;
 }
 
 
@@ -338,8 +268,9 @@ void print_tree(){
 	}
 
 	print_ram();
-//	tree = empty_tree;
 }
+
+
 
 
 void yyerror (char *s) {fprintf (stderr, "%s\n", s);}
