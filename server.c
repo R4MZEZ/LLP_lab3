@@ -63,13 +63,20 @@ int main(int argc, char **argv) {
         struct query_tree qtree = {};
         qtree.command = 0;
         qtree.filters = malloc(sizeof(struct filter));
-        qtree.filters->next = NULL;
+        qtree.filters->next = malloc(sizeof(struct filter));
+        qtree.filters->next->next = NULL;
+
         qtree.filters->comp_list = malloc(sizeof(struct comparator));
         qtree.filters->comp_list->next = NULL;
         qtree.filters->comp_list->operation = 0;
-        char* f = "age";
-        struct field_value_pair fv = {.field = f, .int_value = 93260};
+        struct field_value_pair fv = {.field = "age", .int_value = 5675};
         qtree.filters->comp_list->fv = fv;
+
+        qtree.filters->next->comp_list = malloc(sizeof(struct comparator));
+        qtree.filters->next->comp_list->next = NULL;
+        qtree.filters->next->comp_list->operation = 0;
+        struct field_value_pair fv1 = {.field = "name", .int_value = (uint64_t) "ftdvwerc"};
+        qtree.filters->next->comp_list->fv = fv1;
 
         handle_query(file, qtree);
         printf("server: received `%d`\n", t.command);

@@ -208,7 +208,8 @@ find_by_filters(FILE *file, struct filter* filt, struct result_list_tuple **resu
                 if (type == STRING_TYPE) {
                     char *s;
                     read_string_from_tuple(file, &s, size, cur_tuple->data[field_number]);
-                    if (strcmp(s, (char *) filt->comp_list->fv.int_value)) {
+                    s[strlen(s)-1] = '\0';
+                    if (strcmp(s, (char *) filt->comp_list->fv.int_value) != 0) {
                         valid--;
                         break;
                     }
@@ -248,8 +249,8 @@ find_by_filters(FILE *file, struct filter* filt, struct result_list_tuple **resu
             filt = filt->next;
             if (!filt && valid)
                 append_to_result_list(&cur_tuple, i, result);
-//            else if (!valid)
-//                break;
+            else if (!valid)
+                break;
         }
         filt = filt_copy;
 
