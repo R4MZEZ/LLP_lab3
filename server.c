@@ -3,16 +3,19 @@
 #include "proto/message.pb.h"
 #include "headers/common.h"
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-
+#include "db/src/initializer.h"
+#include "db/src/ui/interactive.h"
 
 #define PORT 3939
 
 
-int main(void) {
+int main(int argc, char **argv) {
+    FILE* file = initializer(argc, argv);
+
+
     int listenfd, connfd;
     struct sockaddr_in servaddr;
     int reuse = 1;
@@ -57,6 +60,18 @@ int main(void) {
             printf("Decode failed: %s\n", PB_GET_ERROR(&input));
             return 2;
         }
+        struct query_tree qtree = {};
+        qtree.command = 0;
+        qtree.filters = malloc(sizeof(struct filter));
+        qtree.filters->next = NULL;
+        qtree.filters->comp_list = malloc(sizeof(struct comparator));
+        qtree.filters->comp_list->next = NULL;
+        qtree.filters->comp_list->operation = 0;
+        char* f = "age";
+        struct field_value_pair fv = {.field = f, .int_value = 93260};
+        qtree.filters->comp_list->fv = fv;
+
+        handle_query(file, qtree);
         printf("server: received `%d`\n", t.command);
 
     }

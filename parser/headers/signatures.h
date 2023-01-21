@@ -2,7 +2,7 @@
 #define STRING_T 0
 #define INTEGER_T 1
 #define FLOAT_T 2
-
+#pragma once
 
 struct query_tree{
     uint8_t command;

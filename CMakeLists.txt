@@ -17,8 +17,22 @@ add_executable(LLP3_client
         parser/y.tab.c
         parser/common.c parser/headers/common.h)
 
+
 add_executable(LLP3_server server.c parser/common.c
         proto/message.pb.c
         proto/nanopb/pb_common.c
         proto/nanopb/pb_decode.c
-        proto/nanopb/pb_encode.c)
+        proto/nanopb/pb_encode.c
+        db/src/filetools/basic_file_manager.c
+        db/src/filetools/big_data_tools.c
+        db/src/generator/empty_generator.c
+        db/src/interface/basic_crud.c
+        db/src/interface/crud_interface.c
+        db/src/ui/commands/tools/string_tools.c
+        db/src/ui/commands/add_command.c
+        db/src/ui/commands/find_by_command.c
+        db/src/ui/commands/help_command.c
+        db/src/ui/commands/update_command.c
+        db/src/ui/interactive.c
+        db/src/initializer.c
+        )
