@@ -11,7 +11,6 @@
 
 /* Struct definitions */
 typedef struct _Query_tree {
-    bool has_command;
     int32_t command;
     pb_callback_t filters;
     pb_callback_t settings;
@@ -45,12 +44,12 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define Query_tree_init_default                  {false, 0, {{NULL}, NULL}, {{NULL}, NULL}}
+#define Query_tree_init_default                  {0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define Query_tree_Filter_init_default           {{{NULL}, NULL}}
 #define Query_tree_Value_setting_init_default    {Query_tree_Field_value_pair_init_default}
 #define Query_tree_Comparator_init_default       {0, Query_tree_Field_value_pair_init_default}
 #define Query_tree_Field_value_pair_init_default {{{NULL}, NULL}, 0, false, 0, false, 0}
-#define Query_tree_init_zero                     {false, 0, {{NULL}, NULL}, {{NULL}, NULL}}
+#define Query_tree_init_zero                     {0, {{NULL}, NULL}, {{NULL}, NULL}}
 #define Query_tree_Filter_init_zero              {{{NULL}, NULL}}
 #define Query_tree_Value_setting_init_zero       {Query_tree_Field_value_pair_init_zero}
 #define Query_tree_Comparator_init_zero          {0, Query_tree_Field_value_pair_init_zero}
@@ -71,7 +70,7 @@ extern "C" {
 
 /* Struct field encoding specification for nanopb */
 #define Query_tree_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    command,           1) \
+X(a, STATIC,   REQUIRED, INT32,    command,           1) \
 X(a, CALLBACK, REPEATED, MESSAGE,  filters,           2) \
 X(a, CALLBACK, REPEATED, MESSAGE,  settings,          3)
 #define Query_tree_CALLBACK pb_default_field_callback

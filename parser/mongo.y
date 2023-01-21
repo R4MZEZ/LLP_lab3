@@ -10,6 +10,10 @@ int yylex();
 #include <sys/socket.h>
 #include <unistd.h>
 #include <string.h>
+#include "common.h"
+#include "../proto/message.pb.h"
+#include <pb_encode.h>
+#include <pb_decode.h>
 
 struct query_tree tree = {0};
 struct query_tree empty_tree = {0};
@@ -198,17 +202,27 @@ int main(int argc, char *argv[]) {
 }
 
 void send_data(){
-	char buf[MAXDATASIZE];
 
-	if (send(sockfd, "Hello, server!", 13, 0) == -1)
-		perror("send");
+	Query_tree t = {};
+	t.command = tree.command;
 
-	if ((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) == -1) {
-		perror("recv");
-		return 1;
+	pb_ostream_t output = pb_ostream_from_socket(sockfd);
+	if (!pb_encode_delimited(&output, Query_tree_fields, &t))
+	{
+	    fprintf(stderr, "Encoding failed: %s\n", PB_GET_ERROR(&output));
 	}
-	buf[numbytes] = 0;
-	printf("client: received `%s`\n", buf);
+
+//	char buf[MAXDATASIZE];
+//
+//	if (send(sockfd, "Hello, server!", 13, 0) == -1)
+//		perror("send");
+//
+//	if ((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) == -1) {
+//		perror("recv");
+//		return 1;
+//	}
+//	buf[numbytes] = 0;
+//	printf("client: received `%s`\n", buf);
 }
 
 

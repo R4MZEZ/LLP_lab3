@@ -79,6 +79,10 @@ int yylex();
 #include <sys/socket.h>
 #include <unistd.h>
 #include <string.h>
+#include "common.h"
+#include "../proto/message.pb.h"
+#include <pb_encode.h>
+#include <pb_decode.h>
 
 struct query_tree tree = {0};
 struct query_tree empty_tree = {0};
@@ -103,7 +107,7 @@ void send_data();
 #define MAXDATASIZE 100
 #define PORT "3939"
 
-#line 107 "y.tab.c"
+#line 111 "y.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -215,10 +219,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 38 "mongo.y"
+#line 42 "mongo.y"
 uint64_t num; char *string; float fnum;
 
-#line 222 "y.tab.c"
+#line 226 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -596,10 +600,10 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    54,    54,    55,    58,    60,    62,    64,    66,    69,
-      74,    76,    76,    78,    89,    91,    94,    96,    98,   100,
-     110,   112,   114,   116,   119,   121,   124,   126,   128,   130,
-     132
+       0,    58,    58,    59,    62,    64,    66,    68,    70,    73,
+      78,    80,    80,    82,    93,    95,    98,   100,   102,   104,
+     114,   116,   118,   120,   123,   125,   128,   130,   132,   134,
+     136
 };
 #endif
 
@@ -1438,58 +1442,58 @@ yyreduce:
   switch (yyn)
     {
   case 4:
-#line 58 "mongo.y"
+#line 62 "mongo.y"
                  {send_data();}
-#line 1444 "y.tab.c"
+#line 1448 "y.tab.c"
     break;
 
   case 5:
-#line 60 "mongo.y"
+#line 64 "mongo.y"
                                                            {set_command(0);}
-#line 1450 "y.tab.c"
+#line 1454 "y.tab.c"
     break;
 
   case 6:
-#line 62 "mongo.y"
+#line 66 "mongo.y"
                                                               {set_command(1);}
-#line 1456 "y.tab.c"
+#line 1460 "y.tab.c"
     break;
 
   case 7:
-#line 64 "mongo.y"
+#line 68 "mongo.y"
                                                               {set_command(2);}
-#line 1462 "y.tab.c"
+#line 1466 "y.tab.c"
     break;
 
   case 8:
-#line 66 "mongo.y"
+#line 70 "mongo.y"
                                                                                               {set_command(3);}
-#line 1468 "y.tab.c"
+#line 1472 "y.tab.c"
     break;
 
   case 9:
-#line 69 "mongo.y"
+#line 73 "mongo.y"
                                                        {set_cur_operation(0);
 							vtype = INTEGER_T;
 							set_cur_value("parent", (yyvsp[-1].num), 0);
 							switch_filter();}
-#line 1477 "y.tab.c"
+#line 1481 "y.tab.c"
     break;
 
   case 11:
-#line 76 "mongo.y"
+#line 80 "mongo.y"
                  {switch_filter();}
-#line 1483 "y.tab.c"
+#line 1487 "y.tab.c"
     break;
 
   case 12:
-#line 76 "mongo.y"
+#line 80 "mongo.y"
                                                            {switch_filter();}
-#line 1489 "y.tab.c"
+#line 1493 "y.tab.c"
     break;
 
   case 13:
-#line 78 "mongo.y"
+#line 82 "mongo.y"
                             {
 				set_cur_operation(0);
 				float val;
@@ -1500,29 +1504,29 @@ yyreduce:
 					set_cur_value((yyvsp[-2].string), (yyvsp[0].num), 0);
 
 			}
-#line 1504 "y.tab.c"
+#line 1508 "y.tab.c"
     break;
 
   case 14:
-#line 89 "mongo.y"
+#line 93 "mongo.y"
                                 {set_cur_value((yyvsp[-2].string), (yyvsp[0].num), 0);}
-#line 1510 "y.tab.c"
+#line 1514 "y.tab.c"
     break;
 
   case 15:
-#line 91 "mongo.y"
+#line 95 "mongo.y"
                                                            {set_comp();}
-#line 1516 "y.tab.c"
+#line 1520 "y.tab.c"
     break;
 
   case 16:
-#line 94 "mongo.y"
+#line 98 "mongo.y"
                                                      {set_cur_operation((yyvsp[-3].num)); (yyval.num) = (yyvsp[-1].num);}
-#line 1522 "y.tab.c"
+#line 1526 "y.tab.c"
     break;
 
   case 19:
-#line 100 "mongo.y"
+#line 104 "mongo.y"
                              {
 				if (vtype == FLOAT_T){
 					float val;
@@ -1532,77 +1536,77 @@ yyreduce:
 					append_val_setting((yyvsp[-2].string), (yyvsp[0].num), 0);
 
                              }
-#line 1536 "y.tab.c"
+#line 1540 "y.tab.c"
     break;
 
   case 20:
-#line 110 "mongo.y"
+#line 114 "mongo.y"
                            {vtype = STRING_T; (yyval.num) = (yyvsp[-1].string);}
-#line 1542 "y.tab.c"
+#line 1546 "y.tab.c"
     break;
 
   case 21:
-#line 112 "mongo.y"
+#line 116 "mongo.y"
                    {vtype = INTEGER_T; (yyval.num) = (yyvsp[0].num);}
-#line 1548 "y.tab.c"
+#line 1552 "y.tab.c"
     break;
 
   case 22:
-#line 114 "mongo.y"
+#line 118 "mongo.y"
                      {vtype = FLOAT_T; memcpy(&(yyval.num), &(yyvsp[0].fnum), sizeof(uint64_t));}
-#line 1554 "y.tab.c"
+#line 1558 "y.tab.c"
     break;
 
   case 23:
-#line 116 "mongo.y"
+#line 120 "mongo.y"
              {vtype = INTEGER_T; (yyval.num) = (yyvsp[0].num);}
-#line 1560 "y.tab.c"
+#line 1564 "y.tab.c"
     break;
 
   case 24:
-#line 119 "mongo.y"
+#line 123 "mongo.y"
             {(yyval.num) = 1;}
-#line 1566 "y.tab.c"
+#line 1570 "y.tab.c"
     break;
 
   case 25:
-#line 121 "mongo.y"
+#line 125 "mongo.y"
              {(yyval.num) = 0;}
-#line 1572 "y.tab.c"
+#line 1576 "y.tab.c"
     break;
 
   case 26:
-#line 124 "mongo.y"
+#line 128 "mongo.y"
           {(yyval.num) = 1;}
-#line 1578 "y.tab.c"
+#line 1582 "y.tab.c"
     break;
 
   case 27:
-#line 126 "mongo.y"
+#line 130 "mongo.y"
            {(yyval.num) = 2;}
-#line 1584 "y.tab.c"
+#line 1588 "y.tab.c"
     break;
 
   case 28:
-#line 128 "mongo.y"
+#line 132 "mongo.y"
           {(yyval.num) = 3;}
-#line 1590 "y.tab.c"
+#line 1594 "y.tab.c"
     break;
 
   case 29:
-#line 130 "mongo.y"
+#line 134 "mongo.y"
            {(yyval.num) = 4;}
-#line 1596 "y.tab.c"
+#line 1600 "y.tab.c"
     break;
 
   case 30:
-#line 132 "mongo.y"
+#line 136 "mongo.y"
           {(yyval.num) = 5;}
-#line 1602 "y.tab.c"
+#line 1606 "y.tab.c"
     break;
 
 
-#line 1606 "y.tab.c"
+#line 1610 "y.tab.c"
 
       default: break;
     }
@@ -1834,7 +1838,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 134 "mongo.y"
+#line 138 "mongo.y"
                      /* C code */
 
 
@@ -1902,17 +1906,27 @@ int main(int argc, char *argv[]) {
 }
 
 void send_data(){
-	char buf[MAXDATASIZE];
 
-	if (send(sockfd, "Hello, server!", 13, 0) == -1)
-		perror("send");
+	Query_tree t = {};
+	t.command = tree.command;
 
-	if ((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) == -1) {
-		perror("recv");
-		return 1;
+	pb_ostream_t output = pb_ostream_from_socket(sockfd);
+	if (!pb_encode_delimited(&output, Query_tree_fields, &t))
+	{
+	    fprintf(stderr, "Encoding failed: %s\n", PB_GET_ERROR(&output));
 	}
-	buf[numbytes] = 0;
-	printf("client: received `%s`\n", buf);
+
+//	char buf[MAXDATASIZE];
+//
+//	if (send(sockfd, "Hello, server!", 13, 0) == -1)
+//		perror("send");
+//
+//	if ((numbytes = recv(sockfd, buf, MAXDATASIZE - 1, 0)) == -1) {
+//		perror("recv");
+//		return 1;
+//	}
+//	buf[numbytes] = 0;
+//	printf("client: received `%s`\n", buf);
 }
 
 

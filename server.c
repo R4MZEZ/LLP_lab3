@@ -1,6 +1,7 @@
 #include <pb_encode.h>
-#include <malloc.h>
+#include <pb_decode.h>
 #include "proto/message.pb.h"
+#include "parser/common.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -100,19 +101,29 @@ int main(void) {
               s, sizeof s);
     printf("server: got connection from %s\n", s);
 
+    pb_istream_t input = pb_istream_from_socket(new_fd);
+
     size_t numbytes;
     char buf[MAXDATASIZE];
 
     while (1) {
-        if ((numbytes = recv(new_fd, buf, MAXDATASIZE - 1, 0)) == -1) {
-            perror("recv");
-            return 1;
+        Query_tree t = {};
+        if (!pb_decode_delimited(&input, Query_tree_fields, &t))
+        {
+            printf("Decode failed: %s\n", PB_GET_ERROR(&input));
+            return 2;
         }
-        buf[numbytes] = 0;
-        printf("server: received `%s`\n", buf);
 
-        if (send(new_fd, "Hello, world!", 13, 0) == -1)
-            perror("send");
+
+//        if ((numbytes = recv(new_fd, buf, MAXDATASIZE - 1, 0)) == -1) {
+//            perror("recv");
+//            return 1;
+//        }
+//        buf[numbytes] = 0;
+        printf("server: received `%d`\n", t.command);
+
+//        if (send(new_fd, "Hello, world!", 13, 0) == -1)
+//            perror("send");
 
     }
 

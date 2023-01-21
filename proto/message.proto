@@ -1,7 +1,7 @@
 syntax = "proto2";
 
 message Query_tree {
-  optional int32 command = 1;
+  required int32 command = 1;
   repeated Filter filters = 2;
   repeated Value_setting settings = 3;
 

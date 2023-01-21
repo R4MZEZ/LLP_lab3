@@ -113,7 +113,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 38 "mongo.y"
+#line 42 "mongo.y"
 uint64_t num; char *string; float fnum;
 
 #line 120 "y.tab.h"
