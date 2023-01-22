@@ -142,13 +142,72 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
+void parse_tree(Query_tree* qtree){
+
+	qtree->command = tree.command;
+
+	size_t filt_idx = 0;
+	size_t comp_idx = 0;
+	while(tree.filters){
+		if (!tree.filters->comp_list){
+			tree.filters = tree.filters->next;
+			continue;
+		}
+		Query_tree_Filter filter = Query_tree_Filter_init_zero;
+		while(tree.filters->comp_list){
+		    Query_tree_Comparator comp = Query_tree_Comparator_init_zero;
+		    Query_tree_Field_value_pair fv = Query_tree_Field_value_pair_init_zero;
+		    fv.val_type = tree.filters->comp_list->fv.val_type;
+		    fv.int_val = tree.filters->comp_list->fv.int_value;
+		    fv.real_val = tree.filters->comp_list->fv.real_value;
+		    if (fv.val_type == STRING_T)
+			strcpy(fv.str_val, tree.filters->comp_list->fv.int_value);
+		    strcpy(fv.field, tree.filters->comp_list->fv.field);
+		    comp.fv = fv;
+		    comp.operation = tree.filters->comp_list->operation;
+		    filter.comp_list[comp_idx++] = comp;
+		    tree.filters->comp_list = tree.filters->comp_list->next;
+		}
+		filter.comp_list_count = comp_idx;
+		qtree->filters[filt_idx++] = filter;
+
+		comp_idx = 0;
+		tree.filters = tree.filters->next;
+	}
+
+	qtree->filters_count = filt_idx;
+
+	size_t setting_idx = 0;
+	while(tree.settings){
+	Query_tree_Value_setting val = Query_tree_Value_setting_init_zero;
+	Query_tree_Field_value_pair fv = Query_tree_Field_value_pair_init_zero;
+	fv.val_type = tree.settings->fv.val_type;
+	fv.int_val = tree.settings->fv.int_value;
+	fv.real_val = tree.settings->fv.real_value;
+	if (fv.val_type == STRING_T){
+		strcpy(fv.str_val, tree.settings->fv.int_value);
+	}
+	strcpy(fv.field, tree.settings->fv.field);
+	val.fv = fv;
+
+	qtree->settings[setting_idx++] = val;
+	tree.settings = tree.settings->next;
+	}
+	qtree->settings_count = setting_idx;
+
+}
+
+
 void send_data(){
 
-	Query_tree t = {};
-	t.command = tree.command;
+	Query_tree qtree = Query_tree_init_zero;
+
+	parse_tree(&qtree);
+
+	printf("%d\n", qtree.filters[0].comp_list[0].operation);
 
 	pb_ostream_t output = pb_ostream_from_socket(sockfd);
-	if (!pb_encode_delimited(&output, Query_tree_fields, &t))
+	if (!pb_encode_delimited(&output, Query_tree_fields, &qtree))
 	{
 	    fprintf(stderr, "Encoding failed: %s\n", PB_GET_ERROR(&output));
 	}

@@ -6,10 +6,10 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
-PB_BIND(Query_tree, Query_tree, AUTO)
+PB_BIND(Query_tree, Query_tree, 4)
 
 
-PB_BIND(Query_tree_Filter, Query_tree_Filter, AUTO)
+PB_BIND(Query_tree_Filter, Query_tree_Filter, 2)
 
 
 PB_BIND(Query_tree_Value_setting, Query_tree_Value_setting, AUTO)

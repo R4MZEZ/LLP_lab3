@@ -80,20 +80,19 @@ size_t add_input_item(FILE *f, char **str, size_t pattern_size, const uint32_t *
 }
 
 size_t add_input_item_new(FILE *f,
-                          struct value_setting *settings,
+                          Query_tree_Value_setting *settings,
+                          size_t settings_count,
                           uint64_t parent_id,
                           size_t pattern_size,
                           const uint32_t *pattern_types,
                           char **pattern_names) {
-    size_t count = 0;
     uint64_t fields[pattern_size];
     size_t par_pos = -1;
 
-    while (settings) {
-        count++;
+    for (int s_idx = 0; s_idx < settings_count; ++s_idx) {
 
         for (size_t in_iter = 0; in_iter < pattern_size; in_iter++) {
-            if (strcmp(settings->fv.field, pattern_names[in_iter]) == 0) {
+            if (strcmp(settings[s_idx].fv.field, pattern_names[in_iter]) == 0) {
                 par_pos = in_iter;
                 break;
             }
@@ -106,42 +105,41 @@ size_t add_input_item_new(FILE *f,
         double val;
         switch (pattern_types[par_pos]) {
             case BOOLEAN_TYPE:
-                if (settings->fv.int_value == 1)
+                if (settings[s_idx].fv.int_val == 1)
                     fields[par_pos] = true;
-                else if (settings->fv.int_value == 0)
+                else if (settings[s_idx].fv.int_val == 0)
                     fields[par_pos] = false;
                 else {
-                    printf("Not-bool '%lu'\n", settings->fv.int_value);
+                    printf("Not-bool '%lu'\n", settings[s_idx].fv.int_val);
                     return 4;
                 }
                 break;
             case FLOAT_TYPE:
-                if (settings->fv.val_type != 2) {
-                    printf("Not-float '%f'\n", settings->fv.real_value);
+                if (settings[s_idx].fv.val_type != 2) {
+                    printf("Not-float '%f'\n", settings[s_idx].fv.real_val);
                     return 4;
                 }
-                val = settings->fv.real_value;
+                val = settings[s_idx].fv.real_val;
                 memcpy(&fields[par_pos], &val, sizeof(val));
                 break;
             case INTEGER_TYPE:
-                if (settings->fv.val_type != 1) {
-                    printf("Not-int '%lu'\n", settings->fv.int_value);
+                if (settings[s_idx].fv.val_type != 1) {
+                    printf("Not-int '%lu'\n", settings[s_idx].fv.int_val);
                     return 4;
                 }
-                fields[par_pos] = settings->fv.int_value;
+                fields[par_pos] = settings[s_idx].fv.int_val;
                 break;
             case STRING_TYPE:
-                if (settings->fv.val_type != 0) {
-                    printf("Not-str '%lu'\n", settings->fv.int_value);
+                if (settings[s_idx].fv.val_type != 0) {
+                    printf("Not-str '%s'\n", settings[s_idx].fv.str_val);
                     return 4;
                 }
-                fields[par_pos] = (uint64_t) settings->fv.int_value;
+                fields[par_pos] = (uint64_t) settings[s_idx].fv.str_val;
                 break;
         }
         par_pos = -1;
-        settings = settings->next;
     }
-    if (count == pattern_size)
+    if (settings_count == pattern_size)
         add_tuple(f, fields, parent_id);
     else
         return 5;

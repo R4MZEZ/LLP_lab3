@@ -21,8 +21,9 @@ message Query_tree {
   message Field_value_pair {
     required string field = 1;
     required int32 val_type = 2;
-    optional int64 int_val = 3;
-    optional float real_val = 4;
+    required int64 int_val = 3;
+    required float real_val = 4;
+    required string str_val = 5;
   }
 
 }

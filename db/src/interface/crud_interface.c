@@ -165,7 +165,7 @@ find_by_field(FILE *file, uint64_t field_number, uint64_t *condition, struct res
 }
 
 enum crud_operation_status
-find_by_filters(FILE *file, struct filter *filt, struct result_list_tuple **result, char **pattern_names) {
+find_by_filters(FILE *file, Query_tree_Filter *filt, size_t filt_count, struct result_list_tuple **result, char **pattern_names) {
     uint32_t *types;
     size_t size;
     get_types(file, &types, &size);
@@ -174,26 +174,18 @@ find_by_filters(FILE *file, struct filter *filt, struct result_list_tuple **resu
     struct tuple *cur_tuple = NULL;
     uint64_t field_number;
     uint8_t valid;
-    struct filter *filt_copy = filt;
-    struct comparator *comp_copy;
-
-    if (!filt->next && !filt->comp_list->next && strcmp(filt->comp_list->fv.field, "parent") == 0) {
-        find_by_parent(file, filt->comp_list->fv.int_value, result);
+    if (filt_count == 1 && filt[0].comp_list_count == 1 && strcmp(filt[0].comp_list[0].fv.field, "parent") == 0) {
+        find_by_parent(file, filt[0].comp_list[0].fv.int_val, result);
     } else {
         for (size_t i = 0; i < header->subheader->cur_id; i++) {
             if (header->id_sequence[i] == NULL_VALUE) continue;
             fseek(file, header->id_sequence[i], SEEK_SET);
             read_basic_tuple(file, &cur_tuple, size);
-            while (filt) {
-                comp_copy = filt->comp_list;
-                if (filt->comp_list->next)
-                    valid = 2;
-                else
-                    valid = 1;
+            for (int f_idx = 0; f_idx < filt_count; f_idx++) {
+                valid = filt[f_idx].comp_list_count;
+                for (int comp_idx = 0; comp_idx < filt[f_idx].comp_list_count; comp_idx++) {
+                    char *field = filt[f_idx].comp_list[comp_idx].fv.field;
 
-                while (filt->comp_list) {
-
-                    char *field = filt->comp_list->fv.field;
                     field_number = -1;
                     for (int j = 0; j < size; j++) {
                         if (strcmp(pattern_names[j], field) == 0) {
@@ -211,51 +203,46 @@ find_by_filters(FILE *file, struct filter *filt, struct result_list_tuple **resu
                         char *s;
                         read_string_from_tuple(file, &s, size, cur_tuple->data[field_number]);
                         s[strlen(s) - 1] = '\0';
-                        if (strcmp(s, (char *) filt->comp_list->fv.int_value) != 0) {
+                        if (strcmp(s, filt[f_idx].comp_list[comp_idx].fv.str_val) != 0) {
                             valid--;
                             break;
                         }
                         free_test(s);
                     } else {
-                        switch (filt->comp_list->operation) {
+                        switch (filt[f_idx].comp_list[comp_idx].operation) {
                             case 0:
-                                if (cur_tuple->data[field_number] != filt->comp_list->fv.int_value)
+                                if (cur_tuple->data[field_number] != filt[f_idx].comp_list[comp_idx].fv.int_val)
                                     valid--;
                                 break;
                             case 1:
-                                if (cur_tuple->data[field_number] >= filt->comp_list->fv.int_value)
+                                if (cur_tuple->data[field_number] >= filt[f_idx].comp_list[comp_idx].fv.int_val)
                                     valid--;
                                 break;
                             case 2:
-                                if (cur_tuple->data[field_number] > filt->comp_list->fv.int_value)
+                                if (cur_tuple->data[field_number] > filt[f_idx].comp_list[comp_idx].fv.int_val)
                                     valid--;
                                 break;
                             case 3:
-                                if (cur_tuple->data[field_number] <= filt->comp_list->fv.int_value)
+                                if (cur_tuple->data[field_number] <= filt[f_idx].comp_list[comp_idx].fv.int_val)
                                     valid--;
                                 break;
                             case 4:
-                                if (cur_tuple->data[field_number] < filt->comp_list->fv.int_value)
+                                if (cur_tuple->data[field_number] < filt[f_idx].comp_list[comp_idx].fv.int_val)
                                     valid--;
                                 break;
                             case 5:
-                                if (cur_tuple->data[field_number] == filt->comp_list->fv.int_value)
+                                if (cur_tuple->data[field_number] == filt[f_idx].comp_list[comp_idx].fv.int_val)
                                     valid--;
                                 break;
                         }
 
                     }
-                    filt->comp_list = filt->comp_list->next;
                 }
-                filt->comp_list = comp_copy;
-                filt = filt->next;
-                if (!filt && valid)
+                if (f_idx == filt_count - 1 && valid)
                     append_to_result_list(&cur_tuple, i, result);
                 else if (!valid)
                     break;
             }
-            filt = filt_copy;
-
         }
     }
     free_test_tree_header(header);

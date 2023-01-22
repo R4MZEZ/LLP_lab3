@@ -81,7 +81,7 @@ void interactive_mode(FILE *f) {
     close_file(f);
 }
 
-void handle_query(FILE *f, struct query_tree tree){
+void handle_query(FILE *f, Query_tree tree){
     size_t pattern_size;
     size_t err_code;
     struct tree_header *header = malloc_test(sizeof(struct tree_header));
@@ -100,7 +100,7 @@ void handle_query(FILE *f, struct query_tree tree){
     struct result_list_tuple *result = NULL;
     switch (tree.command) {
         case 0:
-            find_by_filters(f, tree.filters, &result, pattern_names);
+            find_by_filters(f, tree.filters, tree.filters_count, &result, pattern_names);
             if (result != NULL) {
                 printf("--- FIND RESULT ---\n");
                 do {
@@ -111,7 +111,7 @@ void handle_query(FILE *f, struct query_tree tree){
                 printf("--- NO RESULTS ---\n");
             break;
         case 1:
-            find_by_filters(f, tree.filters, &result, pattern_names);
+            find_by_filters(f, tree.filters, tree.filters_count, &result, pattern_names);
             if (result != NULL) {
                 printf("--- REMOVE RESULT ---\n");
                 do {
@@ -126,14 +126,27 @@ void handle_query(FILE *f, struct query_tree tree){
                 printf("--- NO RESULTS ---\n");
             break;
         case 2:
-            err_code = add_input_item_new(f, tree.settings,
-                                          tree.filters->comp_list->fv.int_value,
+            err_code = add_input_item_new(f, tree.settings, tree.settings_count,
+                                          tree.filters[0].comp_list[0].fv.int_val,
                                           pattern_size, pattern_types, pattern_names);
             if (err_code != 0) {
                 printf("Error code: %zu\n", err_code);
             }
             break;
         case 3:
+            find_by_filters(f, tree.filters, tree.filters_count, &result, pattern_names);
+            if (result != NULL) {
+                printf("--- UPDATE RESULT ---\n");
+                do {
+                    err_code = update_item_new(f, result->id, tree.settings, tree.settings_count, pattern_size, pattern_types, pattern_names);
+                    if (err_code != 0) {
+                        printf("Error code: %zu\n", err_code);
+                    }
+                    printf("Updated id: %lu\n", (uint64_t) result->id);
+                    result = result->prev;
+                } while (result != NULL);
+            }else
+                printf("--- NO RESULTS ---\n");
             break;
 
     }

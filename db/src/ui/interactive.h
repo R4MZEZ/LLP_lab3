@@ -11,9 +11,10 @@
 #include "commands/help_command.h"
 #include "commands/update_command.h"
 #include "../../../parser/headers/signatures.h"
+#include "message.pb.h"
 
 
 void interactive_mode(FILE* f);
-void handle_query(FILE *f, struct query_tree tree);
+void handle_query(FILE *f, Query_tree tree);
 
 #endif
