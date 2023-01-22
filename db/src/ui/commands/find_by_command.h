@@ -7,6 +7,5 @@
 #include <string.h>
 
 void find_by(FILE *f, char **arr, size_t pattern_size, const uint32_t *pattern_types, char **pattern_names, size_t count);
-void find_by_qtree(FILE *f, struct query_tree queryTree, size_t pattern_size, char **pattern_names);
 
 #endif

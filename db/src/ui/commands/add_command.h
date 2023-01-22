@@ -5,5 +5,11 @@
 
 
 size_t add_input_item(FILE *f, char **str, size_t pattern_size, const uint32_t *pattern_types, char **pattern_names);
+size_t add_input_item_new(FILE *f,
+                          struct value_setting *settings,
+                          uint64_t parent_id,
+                          size_t pattern_size,
+                          const uint32_t *pattern_types,
+                          char **pattern_names);
 
 #endif

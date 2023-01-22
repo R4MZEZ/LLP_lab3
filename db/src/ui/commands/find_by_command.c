@@ -116,19 +116,3 @@ find_by(FILE *f, char **arr, size_t pattern_size, const uint32_t *pattern_types,
     } else if (strcmp(arr[1], "id") != 0)
         printf("no result present\n");
 }
-
-void find_by_qtree(FILE *f, struct query_tree queryTree, size_t pattern_size, char **pattern_names){
-    struct query_tree queryTree_copy = queryTree;
-    struct result_list_tuple *result = NULL;
-
-    find_by_filters(f, queryTree_copy.filters, &result, pattern_size, pattern_names);
-    if (result != NULL) {
-        printf("--- FIND RESULT ---\n");
-        do {
-            printf("id: %lu\n", (uint64_t) result->id);
-            result = result->prev;
-        } while (result != NULL);
-    }else
-        printf("--- NO RESULTS ---\n");
-
-}

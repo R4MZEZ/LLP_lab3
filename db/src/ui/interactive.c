@@ -83,6 +83,7 @@ void interactive_mode(FILE *f) {
 
 void handle_query(FILE *f, struct query_tree tree){
     size_t pattern_size;
+    size_t err_code;
     struct tree_header *header = malloc_test(sizeof(struct tree_header));
 
     read_tree_header(header, f);
@@ -96,10 +97,43 @@ void handle_query(FILE *f, struct query_tree tree){
     }
 
     printf("COMMAND: %x\n", tree.command);
-    printf("P_SIZE: %zu\n", pattern_size);
+    struct result_list_tuple *result = NULL;
     switch (tree.command) {
         case 0:
-            find_by_qtree(f, tree, pattern_size, pattern_names);
+            find_by_filters(f, tree.filters, &result, pattern_names);
+            if (result != NULL) {
+                printf("--- FIND RESULT ---\n");
+                do {
+                    printf("id: %lu\n", (uint64_t) result->id);
+                    result = result->prev;
+                } while (result != NULL);
+            }else
+                printf("--- NO RESULTS ---\n");
+            break;
+        case 1:
+            find_by_filters(f, tree.filters, &result, pattern_names);
+            if (result != NULL) {
+                printf("--- REMOVE RESULT ---\n");
+                do {
+                    if (remove_tuple(f, result->id, 0) == CRUD_INVALID)
+                        printf("Already removed ");
+                    else
+                        printf("Removed successfully ");
+                    printf("id: %lu\n", (uint64_t) result->id);
+                    result = result->prev;
+                } while (result != NULL);
+            }else
+                printf("--- NO RESULTS ---\n");
+            break;
+        case 2:
+            err_code = add_input_item_new(f, tree.settings,
+                                          tree.filters->comp_list->fv.int_value,
+                                          pattern_size, pattern_types, pattern_names);
+            if (err_code != 0) {
+                printf("Error code: %zu\n", err_code);
+            }
+            break;
+        case 3:
             break;
 
     }

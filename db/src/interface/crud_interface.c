@@ -6,10 +6,10 @@ size_t add_tuple(FILE *file, uint64_t *fields, uint64_t parent_id) {
     uint32_t *types;
     size_t size;
     get_types(file, &types, &size);
-    struct tree_header* header = malloc(sizeof(struct tree_header));
+    struct tree_header *header = malloc(sizeof(struct tree_header));
     read_tree_header(header, file);
 
-    struct tuple* new_tuple = malloc_test(sizeof(struct tuple));
+    struct tuple *new_tuple = malloc_test(sizeof(struct tuple));
     union tuple_header new_tuple_header = {.parent = parent_id, .alloc = header->subheader->cur_id};
 
     new_tuple->header = new_tuple_header;
@@ -37,7 +37,6 @@ size_t add_tuple(FILE *file, uint64_t *fields, uint64_t parent_id) {
     link_strings_to_tuple(file, new_tuple, link);
 
     size_t id = append_to_id_array(file, link);
-
 
 
     free_test_tuple(new_tuple);
@@ -166,94 +165,98 @@ find_by_field(FILE *file, uint64_t field_number, uint64_t *condition, struct res
 }
 
 enum crud_operation_status
-find_by_filters(FILE *file, struct filter* filt, struct result_list_tuple **result, size_t pattern_size, char **pattern_names) {
+find_by_filters(FILE *file, struct filter *filt, struct result_list_tuple **result, char **pattern_names) {
     uint32_t *types;
     size_t size;
     get_types(file, &types, &size);
     struct tree_header *header = malloc_test(sizeof(struct tree_header));
     read_tree_header(header, file);
     struct tuple *cur_tuple = NULL;
-    uint64_t field_number = 0;
-    uint8_t valid = 1;
-    struct filter* filt_copy = filt;
-    struct comparator* comp_copy;
+    uint64_t field_number;
+    uint8_t valid;
+    struct filter *filt_copy = filt;
+    struct comparator *comp_copy;
 
-    for (size_t i = 0; i < header->subheader->cur_id; i++) {
-        if (header->id_sequence[i] == NULL_VALUE) continue;
-        fseek(file, header->id_sequence[i], SEEK_SET);
-        read_basic_tuple(file, &cur_tuple, size);
-        while(filt) {
-            comp_copy = filt->comp_list;
-            if (filt->comp_list->next)
-                valid = 2;
-            else
-                valid = 1;
+    if (!filt->next && !filt->comp_list->next && strcmp(filt->comp_list->fv.field, "parent") == 0) {
+        find_by_parent(file, filt->comp_list->fv.int_value, result);
+    } else {
+        for (size_t i = 0; i < header->subheader->cur_id; i++) {
+            if (header->id_sequence[i] == NULL_VALUE) continue;
+            fseek(file, header->id_sequence[i], SEEK_SET);
+            read_basic_tuple(file, &cur_tuple, size);
+            while (filt) {
+                comp_copy = filt->comp_list;
+                if (filt->comp_list->next)
+                    valid = 2;
+                else
+                    valid = 1;
 
-            while(filt->comp_list) {
+                while (filt->comp_list) {
 
-                char* field = filt->comp_list->fv.field;
-                field_number = -1;
-                for (int j = 0; j < pattern_size; j++) {
-                    if (strcmp(pattern_names[j], field) == 0) {
-                        field_number = j;
+                    char *field = filt->comp_list->fv.field;
+                    field_number = -1;
+                    for (int j = 0; j < size; j++) {
+                        if (strcmp(pattern_names[j], field) == 0) {
+                            field_number = j;
+                        }
                     }
-                }
-                if (field_number == -1) {
-                    printf("Such field does not exist: %s\n", field);
-                    break;
-                }
-
-                uint64_t type = types[field_number];
-
-                if (type == STRING_TYPE) {
-                    char *s;
-                    read_string_from_tuple(file, &s, size, cur_tuple->data[field_number]);
-                    s[strlen(s)-1] = '\0';
-                    if (strcmp(s, (char *) filt->comp_list->fv.int_value) != 0) {
-                        valid--;
+                    if (field_number == -1) {
+                        printf("Such field does not exist: %s\n", field);
                         break;
                     }
-                    free_test(s);
-                } else{
-                    switch (filt->comp_list->operation) {
-                        case 0:
-                            if (cur_tuple->data[field_number] != filt->comp_list->fv.int_value)
-                                valid--;
+
+                    uint64_t type = types[field_number];
+
+                    if (type == STRING_TYPE) {
+                        char *s;
+                        read_string_from_tuple(file, &s, size, cur_tuple->data[field_number]);
+                        s[strlen(s) - 1] = '\0';
+                        if (strcmp(s, (char *) filt->comp_list->fv.int_value) != 0) {
+                            valid--;
                             break;
-                        case 1:
-                            if (cur_tuple->data[field_number] >= filt->comp_list->fv.int_value)
-                                valid--;
-                            break;
-                        case 2:
-                            if (cur_tuple->data[field_number] > filt->comp_list->fv.int_value)
-                                valid--;
-                            break;
-                        case 3:
-                            if (cur_tuple->data[field_number] <= filt->comp_list->fv.int_value)
-                                valid--;
-                            break;
-                        case 4:
-                            if (cur_tuple->data[field_number] < filt->comp_list->fv.int_value)
-                                valid--;
-                            break;
-                        case 5:
-                            if (cur_tuple->data[field_number] == filt->comp_list->fv.int_value)
-                                valid--;
-                            break;
+                        }
+                        free_test(s);
+                    } else {
+                        switch (filt->comp_list->operation) {
+                            case 0:
+                                if (cur_tuple->data[field_number] != filt->comp_list->fv.int_value)
+                                    valid--;
+                                break;
+                            case 1:
+                                if (cur_tuple->data[field_number] >= filt->comp_list->fv.int_value)
+                                    valid--;
+                                break;
+                            case 2:
+                                if (cur_tuple->data[field_number] > filt->comp_list->fv.int_value)
+                                    valid--;
+                                break;
+                            case 3:
+                                if (cur_tuple->data[field_number] <= filt->comp_list->fv.int_value)
+                                    valid--;
+                                break;
+                            case 4:
+                                if (cur_tuple->data[field_number] < filt->comp_list->fv.int_value)
+                                    valid--;
+                                break;
+                            case 5:
+                                if (cur_tuple->data[field_number] == filt->comp_list->fv.int_value)
+                                    valid--;
+                                break;
+                        }
+
                     }
-
+                    filt->comp_list = filt->comp_list->next;
                 }
-                filt->comp_list = filt->comp_list->next;
+                filt->comp_list = comp_copy;
+                filt = filt->next;
+                if (!filt && valid)
+                    append_to_result_list(&cur_tuple, i, result);
+                else if (!valid)
+                    break;
             }
-            filt->comp_list = comp_copy;
-            filt = filt->next;
-            if (!filt && valid)
-                append_to_result_list(&cur_tuple, i, result);
-            else if (!valid)
-                break;
-        }
-        filt = filt_copy;
+            filt = filt_copy;
 
+        }
     }
     free_test_tree_header(header);
     free_test(types);
@@ -336,7 +339,7 @@ void print_tuple_array_from_file(FILE *file) {
 }
 
 void print_tree_header_from_file(FILE *file) {
-    struct tree_header* header = malloc_test(sizeof(struct tree_header));
+    struct tree_header *header = malloc_test(sizeof(struct tree_header));
     read_tree_header(header, file);
     printf("--- SUBHEADER ---\n");
     printf("%-20s%ld\n", "ASCII Signature: ", header->subheader->ASCII_signature);
