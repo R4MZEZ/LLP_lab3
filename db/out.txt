@@ -1,100 +1,100 @@
-0 age=7186 name=eojfndfitpwocde
-0 age=34085 name=dmahbhe
-1 age=40207 name=myllwgscrvu
-0 age=75523 name=fwhlotdhffva
-1 age=21293 name=pbyihzweptbaxfe
-1 age=68909 name=yonctnnbyzvdcs
-3 age=20523 name=sfhajh
-4 age=64354 name=oswsxft
-5 age=55667 name=sonhvwznknkzaocjw
-2 age=24699 name=pavmozyeinnrncsy
-1 age=1555 name=aqqatxzcmtktacjb
-7 age=32410 name=siymxcsqqo
-11 age=32503 name=ekvwynjyf
-7 age=55949 name=jxtdqg
-12 age=5675 name=ftdvwerc
-2 age=70318 name=tpcfuier
-15 age=4991 name=mbrrcdonyrkhsbuu
-15 age=57727 name=iddlyhsyrd
-5 age=10321 name=yhjvgedylytrakadarc
-6 age=86127 name=uxnxfubbdlcfws
-0 age=69350 name=vlvunyslnzk
-12 age=21537 name=tfkflje
-18 age=8977 name=yjvdenggnac
-8 age=70034 name=jafrhm
-15 age=84553 name=fieobcnmwctyk
-20 age=42023 name=ysglaunbfvazmbi
-15 age=77109 name=mrryno
-26 age=92751 name=qpzhlyiuwbqlc
-13 age=9873 name=pjhsperooavxlzfdna
-11 age=34084 name=lfwxbyqxlpln
-16 age=65512 name=spvhdidhmiti
-7 age=90061 name=dvnobakugzqnceb
-17 age=62573 name=bviaczl
-13 age=74214 name=uarnvb
-18 age=8349 name=hogxzysbvbyfcrpre
-30 age=71541 name=okazqhvpltwgmday
-21 age=33423 name=adpnpcrnacajskyjurt
-8 age=39166 name=ucydzznmrxy
-11 age=77622 name=vcdckf
-7 age=73074 name=mynfhgndicug
-9 age=65395 name=eftim
-27 age=60710 name=xzxvhxulwapb
-28 age=65384 name=pzzqefhhmwyyh
-11 age=67645 name=qrphygwlyeaoigrekue
-34 age=80625 name=gwobpqbghkmrqwkcqx
-35 age=90142 name=eopoq
-19 age=61650 name=nvolchswkulnzavdm
-20 age=9065 name=pxsfkwzkkdbgs
-35 age=13048 name=ulppjhhejehxtgcyko
-35 age=1401 name=jfkmymqwd
-31 age=61975 name=djrmliqunicfxqld
-15 age=73263 name=xeglfeckp
-44 age=3572 name=etgmdstv
-38 age=90685 name=zhnuajnuhesorgqijr
-28 age=13393 name=xuexhhxudoszlctmis
-15 age=92208 name=ebczidzqks
-42 age=22558 name=bbrinowcemfefzgyb
-25 age=9874 name=wbrvl
-24 age=33023 name=njqxnabvbveeqmiyl
-17 age=99798 name=fqwbgldcndzyxrlvehh
-22 age=41347 name=iafyjuprwhiyg
-33 age=73727 name=inqmmdv
-28 age=91343 name=owoitxthdmaleetpuc
-30 age=31945 name=udxgoqbtviwg
-45 age=85724 name=rmbqkaegchgico
-43 age=28493 name=vbovib
-41 age=10129 name=gdcmxinq
-66 age=39755 name=gdhspynjsccpwqiq
-63 age=24191 name=nfwuutjbmq
-50 age=45395 name=rhqxgwmw
-46 age=67370 name=vnzohunjfldwrskmfn
-35 age=35898 name=chrjckqrkjekcqe
-66 age=11666 name=cdxqxpchj
-33 age=45228 name=fopkxiduwhtfjevptv
-65 age=34929 name=ayutjxwcfhtcmij
-28 age=15519 name=bmnmfyoltwbmlkbqe
-40 age=90698 name=ksxgt
-37 age=28544 name=uijbwtzcyedwuntztfe
-17 age=84431 name=xcsumyiqnsk
-64 age=64605 name=cycwlbsc
-17 age=76849 name=qtkbdjhlrrw
-11 age=84329 name=qvqzzeiktzcuvk
-13 age=54786 name=mkhdscfasehs
-60 age=36579 name=hrvsluyaew
-2 age=30127 name=amltmbmabbjypsheasu
-23 age=12699 name=auuhcirpirfycm
-7 age=39909 name=zgvom
-85 age=12553 name=uvnmnssxuz
-0 age=97135 name=nnkeqtopfnnhtlf
-17 age=20088 name=qmsccrkznrhpwwxgppn
-87 age=77742 name=bfrecavfyl
-57 age=49605 name=gojxyopeglswlzfyhf
-63 age=33140 name=ykghzcbaxfjnwvjthc
-5 age=59182 name=omxlraoqofaly
-6 age=40646 name=wgaaacwyydacni
-67 age=35009 name=paleaxyjioty
-2 age=89592 name=unnqor
-73 age=77043 name=emwdz
-87 age=40240 name=jphhmmlr
-38 age=92076 name=irbtz
+0 age=75703 name=myzjutaz male=True balance=4.654068220986954
+0 age=78359 name=gfrtcwasety male=False balance=36.708352943796804
+0 age=87682 name=bsixlvbqnyd male=False balance=47.6402830277261
+1 age=48223 name=wcbwdgdz male=False balance=42.440095937692796
+1 age=46295 name=bxfws male=True balance=34.420032308212775
+3 age=22417 name=pjknq male=True balance=22.171375996537247
+0 age=8034 name=ejlykvmdxvyfdmutjj male=False balance=37.97187704042765
+2 age=4272 name=rladfupq male=False balance=28.60968287777323
+0 age=87481 name=lgijushhtiiqjdo male=False balance=46.123980209423806
+8 age=23842 name=vdiajgfqpzohxno male=True balance=25.59573385674829
+7 age=40643 name=dbvpawxbjhg male=True balance=12.417312246262146
+0 age=59482 name=envgzelfkpjsoabz male=True balance=29.055939418857143
+11 age=28603 name=xdqlyqqlmhwqpjbgkto male=False balance=40.49018694844053
+7 age=24218 name=jgvfbrpbnbxsuf male=False balance=6.392626965987941
+7 age=16238 name=ntnwvq male=False balance=42.00680352473225
+9 age=61860 name=ibnfacvzgnegcev male=False balance=46.7493159470774
+8 age=32727 name=njvehikshmk male=True balance=41.36811593438428
+1 age=24084 name=slhmwalhh male=False balance=32.867537938422636
+3 age=55690 name=tzhmutoehvvrl male=False balance=39.52791064711834
+0 age=88181 name=scjlwmbas male=False balance=44.20688901411226
+7 age=97481 name=wntmlbftkrmicqr male=True balance=36.92865614749744
+11 age=52860 name=tkqtslhzkitnmaoterh male=False balance=28.04876625128346
+3 age=76256 name=txbsoesgfxkcuukgg male=True balance=10.300148554677573
+17 age=20150 name=yldphhshp male=False balance=10.280611668613066
+16 age=64088 name=stdsoqkl male=True balance=19.214197083480393
+7 age=95835 name=nvzadkjoxmxoalq male=True balance=29.608296195156257
+5 age=98358 name=rdlwh male=False balance=49.953783778525214
+10 age=90201 name=ykpmfkeidyqb male=True balance=7.650674004949042
+0 age=30605 name=vqfifsqnbqsgoumxsn male=True balance=45.45239462626094
+19 age=77192 name=bzvdsdcayqwklu male=True balance=37.36546474844752
+9 age=87459 name=stcdtvobtewcftxxkkx male=True balance=46.514786136930404
+24 age=80082 name=xqwazalipzu male=True balance=40.014851656888396
+18 age=68204 name=bnscoafoiytcpztxx male=False balance=34.33166184766344
+16 age=61507 name=gsuelbvjmam male=False balance=21.88968681823011
+13 age=99893 name=sbqcwsrzxdkvgj male=False balance=8.046913551098882
+4 age=9849 name=zpfpllauzaauaixijv male=False balance=44.62625405867665
+20 age=35430 name=oastvwkyjnxabnwovx male=False balance=21.549003853905422
+36 age=18907 name=auxhgm male=True balance=17.13853832396889
+17 age=61414 name=wnazgexmllel male=True balance=27.81025856828151
+18 age=86243 name=hhnknymkcqdjadcu male=False balance=25.797641374955496
+16 age=51573 name=nghmxiftgnkg male=False balance=3.604043281466579
+40 age=66022 name=rmujrdenrtfyqfwm male=True balance=43.08373561055773
+9 age=64599 name=kyqhz male=True balance=23.752720791449725
+7 age=47350 name=kygosptlyjmjcwebxhl male=True balance=7.32555441762881
+38 age=52227 name=jeqmcyomrndzrewvvgq male=False balance=28.826768512114796
+6 age=76033 name=rfycszftseeigqs male=False balance=14.037739379345025
+14 age=15551 name=llxppqndmgr male=True balance=9.50207330116681
+25 age=86186 name=ogzojbffbsy male=False balance=43.136913381998994
+45 age=41477 name=hhhtidptaitspnjhs male=True balance=22.551799567662922
+40 age=46675 name=faqczufubvngqoaxyxm male=True balance=47.41852918543556
+41 age=66058 name=otwdguimjbesaxqq male=True balance=42.23456451649428
+33 age=59247 name=tabiwdeuostqosee male=True balance=3.105086066220983
+15 age=87587 name=mgkbbgpwyf male=False balance=45.98942993464342
+9 age=50033 name=mugsjodfzfud male=True balance=13.714112257063636
+3 age=19340 name=lawyhiumsq male=True balance=47.90132642507777
+12 age=77630 name=nlsiyf male=True balance=19.056477607863567
+45 age=12299 name=mnxfoxhmozlqqfmpgc male=False balance=48.526560702201536
+31 age=89407 name=jkacmmmudgn male=False balance=9.238999025998993
+0 age=61178 name=nvzalmyp male=False balance=26.39977932246458
+47 age=77182 name=qfikv male=True balance=15.705921622503583
+12 age=734 name=yybvhafp male=True balance=25.39067945914848
+54 age=17304 name=awgtorwlzyltjzggode male=False balance=45.61926793100149
+15 age=88181 name=qeomqprjgrbmhmpfk male=False balance=16.23013098442177
+35 age=74506 name=qsziuwt male=True balance=24.945301211270177
+59 age=27201 name=qoeseftewkviml male=True balance=30.918475972712645
+33 age=93026 name=nezggjeugefoinlylmz male=False balance=23.17950389392963
+49 age=4999 name=qvcgjgrcjtpfjlmegs male=False balance=25.801399339966178
+43 age=62560 name=klzuhdr male=True balance=30.773784380921615
+57 age=82068 name=wsvqwluazlafky male=True balance=2.045219219534336
+14 age=61198 name=zlqjeznuxajnuj male=False balance=15.071307850692824
+30 age=68035 name=shxyyqeouc male=False balance=5.141353510334446
+8 age=66949 name=bqzldvhtrysoobo male=True balance=3.998947677279719
+49 age=49762 name=gpyxp male=True balance=4.0135053643459635
+41 age=13811 name=fritnhbqde male=True balance=22.315180700868016
+45 age=15760 name=eagnffwfw male=False balance=26.659267843741244
+5 age=74340 name=qidruiamuxififjzds male=True balance=13.513659170801414
+54 age=92401 name=kbblhuu male=True balance=22.569144948724198
+56 age=17165 name=ancmvpqktgmq male=True balance=21.77656335319598
+6 age=72826 name=tlamvsazqrj male=False balance=13.853243392886528
+13 age=36461 name=eufsbfuaygff male=False balance=14.529058676952886
+60 age=99482 name=hnopiz male=False balance=21.434779801279614
+43 age=63155 name=biwwh male=False balance=10.254701299117748
+72 age=79672 name=cxfzxu male=False balance=34.59807689167847
+13 age=99036 name=ckbcdi male=True balance=41.154299895901445
+35 age=97678 name=yqlgnvrjxxgn male=True balance=28.81320824674816
+43 age=26224 name=hxaksskcmz male=True balance=25.399398109475662
+74 age=44981 name=lntsberuinwmdj male=True balance=28.449311123202573
+59 age=2789 name=kysxyxzhlvlyibfhn male=False balance=49.535572259969626
+55 age=72476 name=oplerkdyjdzwheh male=True balance=12.605995820850193
+44 age=18504 name=ttekptveqqigf male=True balance=40.43017660994463
+75 age=80734 name=cquopg male=False balance=12.44437218809327
+44 age=90749 name=pvtsui male=True balance=15.736825634031689
+16 age=18881 name=xdsnsfjrcumq male=False balance=6.216348337571306
+30 age=33013 name=wuahzzf male=True balance=30.673422173959814
+88 age=2208 name=yxkbzyklzoy male=False balance=24.945471091568546
+66 age=3126 name=ugand male=True balance=2.4229176483690233
+31 age=25240 name=mokuztwd male=False balance=32.815518685799994
+54 age=57200 name=xubitsktgizbv male=True balance=19.528490971072927
+10 age=30646 name=svgjudsrmzpqwcx male=False balance=49.163181016271956
+9 age=70190 name=qrekhusranl male=False balance=20.16266524288559

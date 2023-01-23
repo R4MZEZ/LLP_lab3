@@ -65,17 +65,6 @@ size_t add_input_item(FILE *f, char **str, size_t pattern_size, const uint32_t *
 
     }
     add_tuple(f, fields, strtol(str[1], NULL, 10));
-
-//    clock_t begin = clock();
-//    struct result_list_tuple *result = NULL;
-//    find_by_parent(f, 0, &result);
-//    clock_t end = clock();
-//    printf("%f\n", (double)(end - begin) / CLOCKS_PER_SEC);
-
-
-
-
-
     return 0;
 }
 
@@ -98,8 +87,7 @@ size_t add_input_item_new(FILE *f,
             }
         }
         if (par_pos == -1) {
-            printf("'%s' field does not match pattern.\n", settings->fv.field);
-            return 3;
+            return PATTERN_ERROR;
         }
 
         double val;
@@ -110,29 +98,25 @@ size_t add_input_item_new(FILE *f,
                 else if (settings[s_idx].fv.int_val == 0)
                     fields[par_pos] = false;
                 else {
-                    printf("Not-bool '%lu'\n", settings[s_idx].fv.int_val);
-                    return 4;
+                    return BOOL_ERROR;
                 }
                 break;
             case FLOAT_TYPE:
                 if (settings[s_idx].fv.val_type != 2) {
-                    printf("Not-float '%f'\n", settings[s_idx].fv.real_val);
-                    return 4;
+                    return FLOAT_ERROR;
                 }
                 val = settings[s_idx].fv.real_val;
                 memcpy(&fields[par_pos], &val, sizeof(val));
                 break;
             case INTEGER_TYPE:
                 if (settings[s_idx].fv.val_type != 1) {
-                    printf("Not-int '%lu'\n", settings[s_idx].fv.int_val);
-                    return 4;
+                    return INT_ERROR;
                 }
                 fields[par_pos] = settings[s_idx].fv.int_val;
                 break;
             case STRING_TYPE:
                 if (settings[s_idx].fv.val_type != 0) {
-                    printf("Not-str '%s'\n", settings[s_idx].fv.str_val);
-                    return 4;
+                    return STR_ERROR;
                 }
                 fields[par_pos] = (uint64_t) settings[s_idx].fv.str_val;
                 break;
@@ -142,6 +126,6 @@ size_t add_input_item_new(FILE *f,
     if (settings_count == pattern_size)
         add_tuple(f, fields, parent_id);
     else
-        return 5;
-    return 0;
+        return COUNT_ERROR;
+    return OK;
 }

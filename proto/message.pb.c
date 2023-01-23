@@ -6,19 +6,29 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
+
+/* The following messages exceed 64kB in size: Query_tree */
+
+/* The PB_FIELD_32BIT compilation option must be defined to support messages that exceed 64 kB in size. */
+#ifndef PB_FIELD_32BIT
+#error Enable PB_FIELD_32BIT to support messages exceeding 64kB in size: Query_tree
+#endif
 PB_BIND(Query_tree, Query_tree, 4)
 
 
-PB_BIND(Query_tree_Filter, Query_tree_Filter, 2)
+PB_BIND(Query_tree_Filter, Query_tree_Filter, 4)
 
 
-PB_BIND(Query_tree_Value_setting, Query_tree_Value_setting, AUTO)
+PB_BIND(Query_tree_Value_setting, Query_tree_Value_setting, 2)
 
 
-PB_BIND(Query_tree_Comparator, Query_tree_Comparator, AUTO)
+PB_BIND(Query_tree_Comparator, Query_tree_Comparator, 2)
 
 
-PB_BIND(Query_tree_Field_value_pair, Query_tree_Field_value_pair, AUTO)
+PB_BIND(Query_tree_Field_value_pair, Query_tree_Field_value_pair, 2)
+
+
+PB_BIND(Response, Response, 2)
 
 
 

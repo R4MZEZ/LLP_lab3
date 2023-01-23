@@ -25,5 +25,10 @@ message Query_tree {
     required float real_val = 4;
     required string str_val = 5;
   }
+}
 
+
+message Response{
+  required int32 last = 2;
+  required string r_string = 1;
 }

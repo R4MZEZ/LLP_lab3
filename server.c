@@ -52,7 +52,9 @@ int main(int argc, char **argv) {
     printf("Got connection.\n");
 
     pb_istream_t input = pb_istream_from_socket(connfd);
+    pb_ostream_t output = pb_ostream_from_socket(connfd);
 
+    char* response = "";
     while (1) {
         Query_tree t = {};
         if (!pb_decode_delimited(&input, Query_tree_fields, &t))
@@ -61,7 +63,27 @@ int main(int argc, char **argv) {
             return 2;
         }
 
-        handle_query(file, t);
+
+        handle_query(file, t, &response);
+
+        Response r = {};
+        while(strlen(response) > 1023){
+            strncpy(r.r_string, response, 1023);
+            r.r_string[1023] = 0;
+            r.last = 0;
+            if (!pb_encode_delimited(&output, Response_fields, &r))
+            {
+                fprintf(stderr, "Encoding failed: %s\n", PB_GET_ERROR(&output));
+            }
+            response += 1023;
+        }
+        strcpy(r.r_string, response);
+        r.last = 1;
+        if (!pb_encode_delimited(&output, Response_fields, &r))
+        {
+            fprintf(stderr, "Encoding failed: %s\n", PB_GET_ERROR(&output));
+        }
+
 
     }
 

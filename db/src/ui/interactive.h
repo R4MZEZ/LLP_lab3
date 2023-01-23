@@ -6,6 +6,6 @@
 #include "commands/include/update_command.h"
 #include "message.pb.h"
 
-void handle_query(FILE *f, Query_tree tree);
+void handle_query(FILE *f, Query_tree tree, char **response_);
 
 #endif

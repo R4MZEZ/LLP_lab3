@@ -115,6 +115,10 @@ comp : LT {$$ = 1;}
 
 int main(int argc, char *argv[]) {
 
+	if (argc != 2){
+		printf("Program takes 1 parameter: host adress.\n");
+		return 1;
+	}
 	struct sockaddr_in servaddr;
 	char *path = NULL;
 
@@ -125,7 +129,7 @@ int main(int argc, char *argv[]) {
 
 	memset(&servaddr, 0, sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
-	servaddr.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+	servaddr.sin_addr.s_addr = inet_addr(argv[1]);
 	servaddr.sin_port = htons(PORT);
 
 	if (connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr)) != 0){
@@ -204,13 +208,32 @@ void send_data(){
 
 	parse_tree(&qtree);
 
-	printf("%d\n", qtree.filters[0].comp_list[0].operation);
-
 	pb_ostream_t output = pb_ostream_from_socket(sockfd);
 	if (!pb_encode_delimited(&output, Query_tree_fields, &qtree))
 	{
 	    fprintf(stderr, "Encoding failed: %s\n", PB_GET_ERROR(&output));
 	}
+
+	Response r = {};
+	pb_istream_t input = pb_istream_from_socket(sockfd);
+	if (!pb_decode_delimited(&input, Response_fields, &r))
+	{
+	    printf("Decode failed: %s\n", PB_GET_ERROR(&input));
+	    return 2;
+	}
+	printf("%s", r.r_string);
+
+	while(!r.last){
+		if (!pb_decode_delimited(&input, Response_fields, &r))
+        	{
+        	    printf("Decode failed: %s\n", PB_GET_ERROR(&input));
+        	    return 2;
+        	}
+		printf("%s", r.r_string);
+	}
+
+
+
 	tree = empty_tree;
 }
 
@@ -287,49 +310,5 @@ void set_comp(){
 void set_command(uint8_t command){
 	tree.command = command;
 }
-
-void print_tree(){
-	printf("COMMAND: %x\n", tree.command);
-	size_t filter_count = 0;
-	size_t comp_count = 0;
-	printf(" FILTERS:\n");
-	while (tree.filters){
-		if (tree.filters->comp_list)
-			printf("  FILTER %zu:\n", filter_count++);
-		while (tree.filters->comp_list){
-			char* field = tree.filters->comp_list->fv.field;
-			uint64_t value = tree.filters->comp_list->fv.int_value;
-			float fvalue = tree.filters->comp_list->fv.real_value;
-			printf("   COMPARATOR %zu:\n", comp_count++);
-			printf("    FIELD '%s'\n    OPERATION '%d'\n", field, tree.filters->comp_list->operation);
-			switch(tree.filters->comp_list->fv.val_type){
-				case STRING_T: printf("    VALUE '%s'\n", value); break;
-				case INTEGER_T: printf("    VALUE '%d'\n", value); break;
-				case FLOAT_T: printf("    VALUE '%f'\n", fvalue); break;
-			}
-			tree.filters->comp_list = tree.filters->comp_list->next;
-		}
-		printf("\n");
-		comp_count = 0;
-		tree.filters = tree.filters->next;
-	}
-	if (tree.settings)
-		printf(" SETTINGS: \n");
-	while (tree.settings){
-		printf("  FIELD '%s'\n", tree.settings->fv.field);
-		switch(tree.settings->fv.val_type){
-			case STRING_T: printf("  VALUE '%s'\n", tree.settings->fv.int_value); break;
-			case INTEGER_T: printf("  VALUE '%lu'\n", tree.settings->fv.int_value); break;
-			case FLOAT_T: printf("  VALUE '%f'\n", tree.settings->fv.real_value); break;
-		}
-		printf("\n");
-		tree.settings = tree.settings->next;
-	}
-
-	print_ram();
-}
-
-
-
 
 void yyerror (char *s) {fprintf (stderr, "%s\n", s);}

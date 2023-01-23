@@ -12,14 +12,14 @@ FILE* initializer(int argc, char **argv) {
     char flag;
 
 
-    if (argc < 4 || argc > 5) {
+    if (argc < 3 || argc > 4) {
         printf("Wrong number of args!\n");
         return NULL;
-    } else if (argc == 5) {
-        arg_filename = argv[4];
+    } else if (argc == 4) {
+        arg_filename = argv[3];
     }
-    main_filename = argv[3];
-    flag = argv[2][1];
+    main_filename = argv[2];
+    flag = argv[1][1];
 
 
     switch (flag) {

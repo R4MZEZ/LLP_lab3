@@ -12,4 +12,14 @@ size_t add_input_item_new(FILE *f,
                           const uint32_t *pattern_types,
                           char **pattern_names);
 
+enum ERR_CODES{
+    OK,
+    PATTERN_ERROR,
+    BOOL_ERROR,
+    FLOAT_ERROR,
+    INT_ERROR,
+    STR_ERROR,
+    COUNT_ERROR
+};
+
 #endif

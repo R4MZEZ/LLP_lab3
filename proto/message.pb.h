@@ -11,11 +11,11 @@
 
 /* Struct definitions */
 typedef struct _Query_tree_Field_value_pair {
-    char field[64];
+    char field[1024];
     int32_t val_type;
     int64_t int_val;
     float real_val;
-    char str_val[64];
+    char str_val[1024];
 } Query_tree_Field_value_pair;
 
 typedef struct _Query_tree_Value_setting {
@@ -40,6 +40,11 @@ typedef struct _Query_tree {
     Query_tree_Value_setting settings[20];
 } Query_tree;
 
+typedef struct _Response {
+    char r_string[1024];
+    int32_t last;
+} Response;
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,11 +56,13 @@ extern "C" {
 #define Query_tree_Value_setting_init_default    {Query_tree_Field_value_pair_init_default}
 #define Query_tree_Comparator_init_default       {0, Query_tree_Field_value_pair_init_default}
 #define Query_tree_Field_value_pair_init_default {"", 0, 0, 0, ""}
+#define Response_init_default                    {"", 0}
 #define Query_tree_init_zero                     {0, 0, {Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero, Query_tree_Filter_init_zero}, 0, {Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero, Query_tree_Value_setting_init_zero}}
 #define Query_tree_Filter_init_zero              {0, {Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero, Query_tree_Comparator_init_zero}}
 #define Query_tree_Value_setting_init_zero       {Query_tree_Field_value_pair_init_zero}
 #define Query_tree_Comparator_init_zero          {0, Query_tree_Field_value_pair_init_zero}
 #define Query_tree_Field_value_pair_init_zero    {"", 0, 0, 0, ""}
+#define Response_init_zero                       {"", 0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define Query_tree_Field_value_pair_field_tag    1
@@ -70,6 +77,8 @@ extern "C" {
 #define Query_tree_command_tag                   1
 #define Query_tree_filters_tag                   2
 #define Query_tree_settings_tag                  3
+#define Response_r_string_tag                    1
+#define Response_last_tag                        2
 
 /* Struct field encoding specification for nanopb */
 #define Query_tree_FIELDLIST(X, a) \
@@ -109,11 +118,18 @@ X(a, STATIC,   REQUIRED, STRING,   str_val,           5)
 #define Query_tree_Field_value_pair_CALLBACK NULL
 #define Query_tree_Field_value_pair_DEFAULT NULL
 
+#define Response_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, STRING,   r_string,          1) \
+X(a, STATIC,   REQUIRED, INT32,    last,              2)
+#define Response_CALLBACK NULL
+#define Response_DEFAULT NULL
+
 extern const pb_msgdesc_t Query_tree_msg;
 extern const pb_msgdesc_t Query_tree_Filter_msg;
 extern const pb_msgdesc_t Query_tree_Value_setting_msg;
 extern const pb_msgdesc_t Query_tree_Comparator_msg;
 extern const pb_msgdesc_t Query_tree_Field_value_pair_msg;
+extern const pb_msgdesc_t Response_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define Query_tree_fields &Query_tree_msg
@@ -121,13 +137,15 @@ extern const pb_msgdesc_t Query_tree_Field_value_pair_msg;
 #define Query_tree_Value_setting_fields &Query_tree_Value_setting_msg
 #define Query_tree_Comparator_fields &Query_tree_Comparator_msg
 #define Query_tree_Field_value_pair_fields &Query_tree_Field_value_pair_msg
+#define Response_fields &Response_msg
 
 /* Maximum encoded size of messages (where known) */
-#define Query_tree_Comparator_size               171
-#define Query_tree_Field_value_pair_size         157
-#define Query_tree_Filter_size                   3480
-#define Query_tree_Value_setting_size            160
-#define Query_tree_size                          72931
+#define Query_tree_Comparator_size               2093
+#define Query_tree_Field_value_pair_size         2079
+#define Query_tree_Filter_size                   41920
+#define Query_tree_Value_setting_size            2082
+#define Query_tree_size                          880191
+#define Response_size                            1037
 
 #ifdef __cplusplus
 } /* extern "C" */

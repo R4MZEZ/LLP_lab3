@@ -74,7 +74,6 @@ enum crud_operation_status remove_tuple(FILE *file, uint64_t id, uint8_t str_fla
     uint32_t *types;
     size_t size;
     get_types(file, &types, &size);
-//    printf("%lu\n", id);
 
     if (!str_flag) {
         uint64_t offset;
@@ -163,8 +162,8 @@ find_by_field(FILE *file, uint64_t field_number, uint64_t *condition, struct res
     return 0;
 }
 
-enum crud_operation_status
-find_by_filters(FILE *file, Query_tree_Filter *filt, size_t filt_count, struct result_list_tuple **result, char **pattern_names) {
+size_t find_by_filters(FILE *file, Query_tree_Filter *filt, size_t filt_count, struct result_list_tuple **result,
+                       char **pattern_names) {
     uint32_t *types;
     size_t size;
     get_types(file, &types, &size);
@@ -175,6 +174,18 @@ find_by_filters(FILE *file, Query_tree_Filter *filt, size_t filt_count, struct r
     uint8_t valid;
     if (filt_count == 1 && filt[0].comp_list_count == 1 && strcmp(filt[0].comp_list[0].fv.field, "parent") == 0) {
         find_by_parent(file, filt[0].comp_list[0].fv.int_val, result);
+    } else if (filt_count == 1 && filt[0].comp_list_count == 1 &&
+               strcmp(filt[0].comp_list[0].fv.field, "id") == 0) {
+
+        uint64_t *fields;
+
+        enum crud_operation_status status = get_tuple(file, &fields, filt[0].comp_list[0].fv.int_val);
+        if (status == CRUD_OK) {
+            cur_tuple = malloc(sizeof(struct tuple));
+            memcpy(cur_tuple->data, fields, sizeof(uint64_t) * size);
+        }
+        append_to_result_list(&cur_tuple, filt[0].comp_list[0].fv.int_val, result);
+        free_test(fields);
     } else {
         for (size_t i = 0; i < header->subheader->cur_id; i++) {
             if (header->id_sequence[i] == NULL_VALUE) continue;
@@ -192,8 +203,7 @@ find_by_filters(FILE *file, Query_tree_Filter *filt, size_t filt_count, struct r
                         }
                     }
                     if (field_number == -1) {
-                        printf("Such field does not exist: %s\n", field);
-                        break;
+                        return 3; // Field does not exist
                     }
 
                     uint64_t type = types[field_number];
@@ -202,10 +212,19 @@ find_by_filters(FILE *file, Query_tree_Filter *filt, size_t filt_count, struct r
                         char *s;
                         read_string_from_tuple(file, &s, size, cur_tuple->data[field_number]);
 //                        s[strlen(s) - 1] = '\0';
-                        if (strcmp(s, filt[f_idx].comp_list[comp_idx].fv.str_val) != 0) {
-                            valid--;
-                            break;
+                        switch (filt[f_idx].comp_list[comp_idx].operation) {
+                            case 0:
+                                if (strcmp(s, filt[f_idx].comp_list[comp_idx].fv.str_val) != 0) {
+                                    valid--;
+                                }
+                                break;
+                            case 5:
+                                if (strcmp(s, filt[f_idx].comp_list[comp_idx].fv.str_val) == 0) {
+                                    valid--;
+                                }
+                                break;
                         }
+
                         free_test(s);
                     } else {
                         switch (filt[f_idx].comp_list[comp_idx].operation) {
