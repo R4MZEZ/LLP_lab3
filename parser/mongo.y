@@ -1,5 +1,5 @@
 %{
-#include "headers/mongo.h"
+#include "include/mongo.h"
 
 struct query_tree tree = {0};
 const struct query_tree empty_tree = {0};

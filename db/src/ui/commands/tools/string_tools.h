@@ -1,8 +1,8 @@
 #ifndef LOW_LEVEL_PROGRAMMING_LAB_1_STRING_TOOLS_H
 #define LOW_LEVEL_PROGRAMMING_LAB_1_STRING_TOOLS_H
-#include "../../../interface/crud_interface.h"
+#include "../../../interface/include/crud_interface.h"
 #include <stdbool.h>
-#include "../add_command.h"
+#include "../include/add_command.h"
 
 char *concat(const char *s1, const char *s2);
 bool isNumeric(const char *str);

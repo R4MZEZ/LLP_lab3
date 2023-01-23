@@ -1,5 +1,5 @@
-#include "big_data_tools.h"
-#include "../interface/basic_crud.h"
+#include "include/big_data_tools.h"
+#include "../interface/include/basic_crud.h"
 
 size_t get_real_tuple_size(uint64_t pattern_size) {
     return pattern_size * SINGLE_TUPLE_VALUE_SIZE < MINIMAL_TUPLE_SIZE

@@ -1,4 +1,4 @@
-#include "add_command.h"
+#include "include/add_command.h"
 
 size_t add_input_item(FILE *f, char **str, size_t pattern_size, const uint32_t *pattern_types, char **pattern_names) {
     char **key_value;

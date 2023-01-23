@@ -1,5 +1,4 @@
-#include <time.h>
-#include "crud_interface.h"
+#include "include/crud_interface.h"
 
 size_t add_tuple(FILE *file, uint64_t *fields, uint64_t parent_id) {
 
@@ -202,7 +201,7 @@ find_by_filters(FILE *file, Query_tree_Filter *filt, size_t filt_count, struct r
                     if (type == STRING_TYPE) {
                         char *s;
                         read_string_from_tuple(file, &s, size, cur_tuple->data[field_number]);
-                        s[strlen(s) - 1] = '\0';
+//                        s[strlen(s) - 1] = '\0';
                         if (strcmp(s, filt[f_idx].comp_list[comp_idx].fv.str_val) != 0) {
                             valid--;
                             break;
@@ -278,7 +277,7 @@ enum crud_operation_status update_tuple(FILE *file, uint64_t field_number, uint6
     fseek(file, offset, SEEK_SET);
     read_basic_tuple(file, &cur_tuple, size);
     if (type == STRING_TYPE) {
-        change_string_tuple(file, cur_tuple->data[field_number], (char *) new_value, get_real_tuple_size(size));
+        change_string_tuple(file, cur_tuple->data[field_number], (char *) *new_value, get_real_tuple_size(size));
     } else {
 
         memcpy(&(cur_tuple->data[field_number]), new_value, sizeof(*new_value));

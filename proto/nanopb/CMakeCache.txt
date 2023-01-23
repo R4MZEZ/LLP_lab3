@@ -246,7 +246,7 @@ nanopb_BINARY_DIR:STATIC=/mnt/c/Users/User/Desktop/llp/LLP3/proto/nanopb
 //Build the protoc plugin for code generation
 nanopb_BUILD_GENERATOR:BOOL=ON
 
-//Build the headers and libraries needed at runtime
+//Build the include and libraries needed at runtime
 nanopb_BUILD_RUNTIME:BOOL=ON
 
 //Link static runtime libraries

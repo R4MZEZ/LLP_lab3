@@ -2,11 +2,11 @@
 #define BIG_DATA_TOOLS_H
 #include <stdlib.h>
 
-#include "../interface/configuration.h"
-#include "../interface/signatures.h"
-#include "../generator/empty_generator.h"
+#include "../../interface/include/configuration.h"
+#include "../../interface/include/signatures.h"
+#include "../../generator/empty_generator.h"
 #include "basic_file_manager.h"
-#include "../interface/crud_interface.h"
+#include "../../interface/include/crud_interface.h"
 
 size_t get_id_array_size(uint64_t pattern_size, uint64_t cur_id);
 /**

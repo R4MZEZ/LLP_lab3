@@ -1892,7 +1892,7 @@ class ProtoFile:
         yield '\n'
 
         for incfile in self.file_options.include:
-            # allow including system headers
+            # allow including system include
             if (incfile.startswith('<')):
                 yield '#include %s\n' % incfile
             else:
@@ -2480,7 +2480,7 @@ def main_cli():
     for fdesc in all_fdescs.values():
         other_files[fdesc.name] = parse_file(fdesc.name, fdesc, options)
 
-    # Then generate the headers / sources
+    # Then generate the include / sources
     for fdesc in out_fdescs.values():
         results = process_file(fdesc.name, fdesc, options, other_files)
 

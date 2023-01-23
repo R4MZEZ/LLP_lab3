@@ -119,7 +119,7 @@ pb_ostream_t pb_ostream_from_buffer(pb_byte_t *buf, size_t bufsize);
 #endif
 
 /* Function to write into a pb_ostream_t stream. You can use this if you need
- * to append or prepend some custom headers to the message.
+ * to append or prepend some custom include to the message.
  */
 bool pb_write(pb_ostream_t *stream, const pb_byte_t *buf, size_t count);
 

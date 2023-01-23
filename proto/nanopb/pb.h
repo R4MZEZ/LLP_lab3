@@ -67,7 +67,7 @@
  * your own program. */
 #define NANOPB_VERSION "nanopb-0.4.8-dev"
 
-/* Include all the system headers needed by nanopb. You will need the
+/* Include all the system include needed by nanopb. You will need the
  * definitions of the following:
  * - strlen, memcpy, memset functions
  * - [u]int_least8_t, uint_fast8_t, [u]int_least16_t, [u]int32_t, [u]int64_t

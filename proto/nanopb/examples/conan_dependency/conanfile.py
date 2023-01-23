@@ -12,7 +12,7 @@ class SimpleProtosConan(ConanFile):
         self.requires("nanopb/0.4.6")
 
     def imports(self):
-        # Includes the nanopb headers
+        # Includes the nanopb include
         self.copy("*.h")
         # Includes the compiled nanopb libraries
         self.copy("*", src="lib", dst="lib")

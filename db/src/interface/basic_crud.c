@@ -1,14 +1,4 @@
-#include <time.h>
-#include "basic_crud.h"
-#include "../filetools/big_data_tools.h"
-#include "crud_interface.h"
-
-enum crud_operation_status delete_last_tuple(FILE *file, size_t full_tuple_size) {
-    fseek(file, full_tuple_size, SEEK_END);
-    int fd = fileno(file);
-    return ftruncate(fd, ftell(file));
-}
-
+#include "include/basic_crud.h"
 
 
 enum crud_operation_status swap_tuple_to(FILE *file, uint64_t pos_to, uint64_t pos_from, size_t tuple_size) {
@@ -67,13 +57,11 @@ enum crud_operation_status swap_tuple_to(FILE *file, uint64_t pos_to, uint64_t p
                     }
                 }
 
-//                printf("PARENT\n data[1]: %lu data[0]: %lu\n", parent->data[1], parent->data[0]);
                 fseek(file, (tpl->header.prev), SEEK_SET);
                 write_tuple(file, parent, get_real_tuple_size(size));
                 free_test_tuple(parent);
             }
             free_test(temp_header);
-//            printf("STRING\n next: %lu, prev: %lu, pos_from: %lu, pos_to: %lu\n", tpl->header.next, tpl->header.prev, pos_from, pos_to);
         } else {
 
             fseek(file, pos_from, SEEK_SET);
@@ -82,7 +70,6 @@ enum crud_operation_status swap_tuple_to(FILE *file, uint64_t pos_to, uint64_t p
             header->id_sequence[id] = pos_to;
             write_tree_header(file, header);
 
-//            printf("TUPLE\nid: %lu, tpl1->data[1]: %lu, pos_from: %lu, pos_to: %lu\n", id, tpl->data[1], pos_from, pos_to);
         }
 
 
@@ -277,16 +264,6 @@ enum crud_operation_status offset_to_id(FILE *file, uint64_t *id, uint64_t offse
         return CRUD_INVALID;
     }
 
-
-//    for (size_t iter = 0; iter < header->subheader->cur_id; iter++) {
-//        if (header->id_sequence[iter] == offset) {
-//            *id = iter;
-//            free_test(header);
-//            return CRUD_OK;
-//        }
-//    }
-//    free_test_tree_header(header);
-//    return CRUD_INVALID;
 }
 
 enum crud_operation_status change_string_tuple(FILE *file, uint64_t offset, char *new_string, uint64_t size) {
@@ -302,7 +279,10 @@ enum crud_operation_status change_string_tuple(FILE *file, uint64_t offset, char
         new_string = new_string + size;
         write_tuple(file, cur_tuple, size);
         old_offset = cur_tuple->header.next;
-        len -= size;
+        if (len > size)
+            len -= size;
+        else
+            len = 0;
     } while (cur_tuple->header.next && len > 0);
     uint64_t fpos;
     if (len > 0) {

@@ -1,4 +1,4 @@
-#include "find_by_command.h"
+#include "include/find_by_command.h"
 
 void
 find_by(FILE *f, char **arr, size_t pattern_size, const uint32_t *pattern_types, char **pattern_names, size_t count) {

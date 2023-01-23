@@ -15,7 +15,7 @@ add_executable(LLP3_client
         proto/nanopb/pb_encode.c
         parser/lex.yy.c
         parser/y.tab.c
-        parser/common.c parser/headers/common.h)
+        parser/common.c parser/include/common.h)
 
 
 add_executable(LLP3_server server.c parser/common.c
@@ -31,7 +31,6 @@ add_executable(LLP3_server server.c parser/common.c
         db/src/ui/commands/tools/string_tools.c
         db/src/ui/commands/add_command.c
         db/src/ui/commands/find_by_command.c
-        db/src/ui/commands/help_command.c
         db/src/ui/commands/update_command.c
         db/src/ui/interactive.c
         db/src/initializer.c

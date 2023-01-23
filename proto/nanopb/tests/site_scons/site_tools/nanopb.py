@@ -143,7 +143,7 @@ def _nanopb_proto_actions(source, target, env, for_signature):
         if not os.path.isabs(d): d = os.path.relpath(d, prefix)
         include_dirs += ' -I' + esc(d)
 
-    # when generating .pb.cpp sources, instead of pb.h generate .pb.hpp headers
+    # when generating .pb.cpp sources, instead of pb.h generate .pb.hpp include
     source_extension = os.path.splitext(str(target[0]))[1]
     header_extension = '.h' + source_extension[2:]
     nanopb_flags = env['NANOPBFLAGS']
